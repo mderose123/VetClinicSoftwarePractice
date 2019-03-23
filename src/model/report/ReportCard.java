@@ -36,7 +36,7 @@ public abstract class ReportCard {
     }
 
     public void addQuestion(Question question) throws NullArgumentException {
-        if(question == null) {
+         if(question == null) {
             throw new NullArgumentException("Date must not be null");
         }
         if(!questionList.contains(question)) {
