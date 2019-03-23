@@ -7,7 +7,7 @@ import model.client.Pet;
 import java.util.Calendar;
 import java.util.Date;
 
-public class BoardingReportCard extends ReportCard {
+public class BoardingReportCard extends ReportCard{
     private Date dateDroppedOff;
     private Date datePickedUp;
     private Calendar referenceCalendar;
