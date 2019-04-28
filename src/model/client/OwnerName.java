@@ -9,16 +9,19 @@ public class OwnerName {
     private String middleName;
     private String lastName;
 
-    public OwnerName(Prefix prefix, String fName, String mName, String lName) throws EmptyStringException, NullArgumentException {
-        if(fName == null || lName == null || fName.isEmpty() || lName.isEmpty() || mName == null || mName.isEmpty()) {
-            throw new EmptyStringException();
-        }
-        if(prefix == null) {
-            throw new NullArgumentException();
-        }
+    public OwnerName(Prefix prefix, String fName, String mName, String lName) {
+        //if(fName == null || lName == null || fName.isEmpty() || lName.isEmpty()) {
+       //     throw new EmptyStringException();
+        //}
+
+        //if(prefix == null) {
+          //  throw new NullArgumentException();
+        //}
+
         this.prefix = prefix;
         this.firstName = fName;
         this.lastName = lName;
+        this.middleName = mName;
     }
 
     public Prefix getPrefix() {

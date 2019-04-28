@@ -18,7 +18,7 @@ public class TestPet {
 
     @Before
     public void runBefore() {
-        testPet = new Pet("Fido");
+        testPet = new Pet("Fido", owner);
     }
 
     @Test
@@ -57,12 +57,12 @@ public class TestPet {
     public void testChangeOwner() {
         assertNull(testPet.getOwner());
 
-        Owner testOwner = new Owner("Charlotte");
-        testPet.setOwner(testOwner);
+        //Owner testOwner = new Owner("Charlotte");
+       // testPet.setOwner(testOwner);
         assertEquals("Charlotte", testPet.getOwner().getName());
 
-        Owner testOwner2 = new Owner("Matthew");
-        testPet.setOwner(testOwner2);
+        //Owner testOwner2 = new Owner("Matthew");
+      //  testPet.setOwner(testOwner2);
         assertEquals("Matthew", testPet.getOwner().getName());
     }
 

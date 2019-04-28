@@ -15,20 +15,19 @@ public class Pet {
     private int age;
     private double microchip;
 
-    List<Owner> owners;
+   // List<Owner> owners;
     private List<ReportCard> reportCards;
     private List<Note> petNotes;
     private Set<BehaviorTag> behaviorTags;
     private int bookedTime;
 
-    public Pet(String name) {
+    public Pet(String name, Owner owner) {
 
         this.name = name;
-        setOwner(owner);
+        this.owner = owner;
 
         setBreed(breed);
         setSpecies(species);
-        setOwner(owner);
         setColour(colour);
         setMicrochip(microchip);
         behaviorTags = new HashSet<>();
@@ -37,9 +36,6 @@ public class Pet {
         this.petNotes = new ArrayList<>();
         reportCards = new ArrayList<>();
 
-        //this.lastName = primaryOwner.getLastName();
-        //this.firstName = firstName;
-        this.owners = new ArrayList<>();
 
 //        if(!owners.contains(primaryOwner)) {
 //            owners.add(primaryOwner);
@@ -153,23 +149,23 @@ public class Pet {
         return bookedTime;
     }
 
-    public List<Owner> getOwners() {
-        return Collections.unmodifiableList(owners);
-    }
+   // public List<Owner> getOwners() {
+     //   return Collections.unmodifiableList(owners);
+    //}
 
-    public void addOwner(Owner owner) {
-        if(!owners.contains(owner)) {
-            owners.add(owner);
-        }
-    }
+//    public void addOwner(Owner owner) {
+//        if(!owners.contains(owner)) {
+//            owners.add(owner);
+//        }
+//    }
 
-    public void removeOwner(Owner owner) {
-        Owner deRefOwner = owner;
-        if(owners.contains(owner)) {
-            owners.remove(owner);
-            deRefOwner.removePet(this);
-        }
-    }
+//    public void removeOwner(Owner owner) {
+//        Owner deRefOwner = owner;
+//        if(owners.contains(owner)) {
+//            owners.remove(owner);
+//            deRefOwner.removePet(this);
+//        }
+//    }
 
     public void addReportCard(ReportCard rc) {
         if(!reportCards.contains(rc)) {
@@ -202,8 +198,17 @@ public class Pet {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pet pet = (Pet) o;
+        return owner.equals(pet.owner) &&
+                name.equals(pet.name);
+    }
 
-
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, name);
+    }
 }
