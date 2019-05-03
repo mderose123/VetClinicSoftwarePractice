@@ -1,12 +1,10 @@
 package test;
 
-import model.client.Owner;
-import model.client.Pet;
-import model.client.Species;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import model.client.*;
+import org.junit.Before;
+import org.junit.Test;
+
 
 
 public class TestPet {
@@ -16,7 +14,7 @@ public class TestPet {
 
     @BeforeEach
     public void runBefore() {
-        testPet = new Pet("Fido");
+        testPet = new Pet("Fido", owner);
     }
 
     @Test
@@ -54,14 +52,13 @@ public class TestPet {
     @Test
     public void testChangeOwner() {
         assertNull(testPet.getOwner());
-
-        Owner testOwner = new Owner("Charlotte");
+        Owner testOwner = new Owner(new OwnerName(Prefix.MS, "Char", null, "Stewart"));
         testPet.setOwner(testOwner);
-        assertEquals("Charlotte", testPet.getOwner().getName());
+        assertEquals(testOwner.getName(), testPet.getOwner().getName());
 
-        Owner testOwner2 = new Owner("Matthew");
+        Owner testOwner2 = new Owner(new OwnerName(Prefix.MR, "Matthew", null, "Brooks"));
         testPet.setOwner(testOwner2);
-        assertEquals("Matthew", testPet.getOwner().getName());
+        assertEquals(testOwner2.getName(), testPet.getOwner().getName());
     }
 
     @Test

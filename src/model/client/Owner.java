@@ -1,34 +1,30 @@
 package model.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Owner {
-    private String name;
-    private List<Pet> pets;
-    private Prefix prefix;
+    private OwnerName name;
+    private Set<Pet> pets;
 
-    //private String name;
     private String email;
-    private int phoneNumber;
-    private String alerts;
+    //private Address address;
+    private PhoneNumber phoneNumber;
+    private String alert;
 
-    public Owner(String name) {
+    public Owner(OwnerName name) {
        this.name = name;
-       pets = new ArrayList<>();
+       pets = new HashSet<>();
 
-       // setPrefix(prefix);
         setPhoneNumber(phoneNumber);
-        setAlerts(alerts);
+        setAlert(alert);
         setEmail(email);
     }
 
-    public String getName() {
+    public OwnerName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(OwnerName name) {
         this.name = name;
     }
 
@@ -40,39 +36,29 @@ public class Owner {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNumber(PhoneNumber pn) {
+        phoneNumber = pn;
     }
 
-    public List<Pet> getPets() {
-        return Collections.unmodifiableList(pets);
+    public String getAlert() {
+        return alert;
     }
 
-    public String getAlerts() {
-        return alerts;
+    public void setAlert(String alerts) {
+        this.alert = alerts;
     }
 
-    public void setAlerts(String alerts) {
-        this.alerts = alerts;
+    public void removeAlert() {
+        alert = null;
     }
 
-
-
-
-    public void removePet(String petName) {
-        List<Pet> toRemove = new ArrayList<>();
-        for (Pet p : pets) {
-            if (ownsPet(petName)) {
-                toRemove.add(p);
-            }
-        }
-        pets.removeAll(toRemove);
+    public Set<Pet> getPets() {
+        return pets;
     }
-
 
     // EFFECTS: returns true if owner owns a pet with petName,
     //          returns false otherwise
@@ -87,8 +73,18 @@ public class Owner {
     public void addPet(Pet pet) {
         if(!pets.contains(pet)) {
             pets.add(pet);
-            pet.addOwner(this);
+           // pet.addOwner(this);
         }
+    }
+
+    public void removePet(String petName) {
+        List<Pet> toRemove = new ArrayList<>();
+        for (Pet p : pets) {
+            if (ownsPet(petName)) {
+                toRemove.add(p);
+            }
+        }
+        pets.removeAll(toRemove);
     }
 
     public void removePet(Pet pet) {
@@ -100,54 +96,9 @@ public class Owner {
                 }
             }
             pets.remove(pet);
-            newPet.removeOwner(this);
+          //  newPet.removeOwner(this);
         }
     }
-
-
-
-//    public Prefix getPrefix() {
-//        return name.getPrefix();
-//    }
-//
-//
-//    public void setPrefix(Prefix prefix) {
-//        if(!name.getPrefix().equals(prefix)) {
-//            name.setPrefix(prefix);
-//        }
-//    }
-
-//    public String getFirstName() {
-//        return name.getFirstName();
-//    }
-//
-//    public String getMiddleName() {
-//        return name.getMiddleName();
-//    }
-//
-//    public String getLastName() {
-//        return name.getLastName();
-//    }
-//
-//    public void setFirstName(String newFirstName) {
-//        if(!newFirstName.equals(name.getFirstName())) {
-//            this.name.setFirstName(newFirstName);
-//        }
-//    }
-//
-//    public void setMiddleName(String newMiddleName) {
-//        if(!newMiddleName.equals(name.getMiddleName())) {
-//            this.name.setFirstName(newMiddleName);
-//        }
-//    }
-//
-//    public void setLastName(String newLastName) {
-//        if(!newLastName.equals(name.getLastName())) {
-//            this.name.setFirstName(newLastName);
-//        }
-//    }
-
-
 
 
 }
