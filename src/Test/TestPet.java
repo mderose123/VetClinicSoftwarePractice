@@ -1,8 +1,6 @@
 package Test;
 
-import model.client.Owner;
-import model.client.Pet;
-import model.client.Species;
+import model.client.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,14 +54,13 @@ public class TestPet {
     @Test
     public void testChangeOwner() {
         assertNull(testPet.getOwner());
+        Owner testOwner = new Owner(new OwnerName(Prefix.MS, "Char", null, "Stewart"));
+        testPet.setOwner(testOwner);
+        assertEquals(testOwner.getName(), testPet.getOwner().getName());
 
-        //Owner testOwner = new Owner("Charlotte");
-       // testPet.setOwner(testOwner);
-        assertEquals("Charlotte", testPet.getOwner().getName());
-
-        //Owner testOwner2 = new Owner("Matthew");
-      //  testPet.setOwner(testOwner2);
-        assertEquals("Matthew", testPet.getOwner().getName());
+        Owner testOwner2 = new Owner(new OwnerName(Prefix.MR, "Matthew", null, "Brooks"));
+        testPet.setOwner(testOwner2);
+        assertEquals(testOwner2.getName(), testPet.getOwner().getName());
     }
 
     @Test

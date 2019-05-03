@@ -1,9 +1,6 @@
 package Test;
 
-import model.client.Owner;
-import model.client.OwnerName;
-import model.client.Pet;
-import model.client.Prefix;
+import model.client.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,9 +23,9 @@ public class TestOwner {
     public void testConstructor() {
         assertEquals(owner.getName(), ownerName);
         assertNull(owner.getEmail());
-        assertEquals(0, owner.getPhoneNumber());
+        assertNull(owner.getPhoneNumber());
         assertTrue(owner.getPets().isEmpty());
-        assertNull(owner.getAlerts());
+        assertNull(owner.getAlert());
     }
 
     @Test
@@ -150,8 +147,36 @@ public class TestOwner {
 
     @Test
     public void testChangePhoneNumber() {
-        assertEquals(owner.getPhoneNumber(), 0);
-        owner.setPhoneNumber(6043537012);
+        assertNull(owner.getPhoneNumber());
+        PhoneNumber pn = new PhoneNumber(604, 353, 7014);
+        owner.setPhoneNumber(pn);
+        assertEquals(owner.getPhoneNumber(), pn);
+    }
+
+    @Test
+    public void removePhoneNumber() {
+        assertNull(owner.getPhoneNumber());
+        PhoneNumber pn = new PhoneNumber(604, 353, 7014);
+        owner.setPhoneNumber(pn);
+        assertEquals(owner.getPhoneNumber(), pn);
+        owner.setPhoneNumber(null);
+        assertNull(owner.getPhoneNumber());
+    }
+
+    @Test
+    public void addAlert() {
+        assertNull(owner.getAlert());
+        owner.setAlert("Do not feed their pet any treats!");
+        assertEquals(owner.getAlert(), "Do not feed their pet any treats!");
+    }
+
+    @Test
+    public void removeAlert() {
+        assertNull(owner.getAlert());
+        owner.setAlert("Do not feed their pet any treats!");
+        assertEquals(owner.getAlert(), "Do not feed their pet any treats!");
+        owner.removeAlert();
+        assertNull(owner.getAlert());
     }
 
 }

@@ -8,15 +8,15 @@ public class Owner {
 
     private String email;
     //private Address address;
-    private int phoneNumber;
-    private String alerts;
+    private PhoneNumber phoneNumber;
+    private String alert;
 
     public Owner(OwnerName name) {
        this.name = name;
        pets = new HashSet<>();
 
         setPhoneNumber(phoneNumber);
-        setAlerts(alerts);
+        setAlert(alert);
         setEmail(email);
     }
 
@@ -36,20 +36,24 @@ public class Owner {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNumber(PhoneNumber pn) {
+        phoneNumber = pn;
     }
 
-    public String getAlerts() {
-        return alerts;
+    public String getAlert() {
+        return alert;
     }
 
-    public void setAlerts(String alerts) {
-        this.alerts = alerts;
+    public void setAlert(String alerts) {
+        this.alert = alerts;
+    }
+
+    public void removeAlert() {
+        alert = null;
     }
 
     public Set<Pet> getPets() {
