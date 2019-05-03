@@ -1,7 +1,7 @@
 package model.report;
 
 import exceptions.NullArgumentException;
-import model.boardingScheduler.ServiceProvided;
+import model.scheduler.ServiceProvided;
 import model.client.Pet;
 
 import java.util.Calendar;

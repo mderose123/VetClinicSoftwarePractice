@@ -1,4 +1,5 @@
-package Test;
+package test;
+
 
 import model.client.*;
 import org.junit.Before;
@@ -9,11 +10,12 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+
 public class TestOwner {
     private Owner owner;
     private OwnerName ownerName;
 
-    @Before
+    @BeforeEach
     public void runBefore() {
         ownerName = new OwnerName(Prefix.MS, "Charlotte", "Olenka", "Stewart");
         owner = new Owner(ownerName);
