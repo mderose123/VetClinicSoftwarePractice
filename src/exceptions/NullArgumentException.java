@@ -1,6 +1,6 @@
 package exceptions;
 
-public class NullArgumentException extends Exception {
+public class NullArgumentException extends RuntimeException {
 
     public NullArgumentException() {
         System.out.println("Entered argument must not be null");

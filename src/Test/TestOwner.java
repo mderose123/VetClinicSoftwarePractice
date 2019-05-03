@@ -1,17 +1,16 @@
-package Test;
+package test;
 
 import model.client.Owner;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class TestOwner {
     private Owner owner;
 
-    @Before
+    @BeforeEach
     public void runBefore() {
         owner = new Owner("Charlotte");
     }
