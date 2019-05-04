@@ -1,6 +1,5 @@
 package test;
 
-
 import model.client.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,7 @@ public class TestOwner {
     private Owner owner;
     private OwnerName ownerName;
 
-    @BeforeEach
+    @Before
     public void runBefore() {
         ownerName = new OwnerName(Prefix.MS, "Charlotte", "Olenka", "Stewart");
         owner = new Owner(ownerName);
