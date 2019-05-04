@@ -15,14 +15,11 @@ public class Appointment {
     private Time earliestTimeSlot;
 
 
-    public Appointment(Schedule schedule, Pet pet, ServiceProvided service, String description, int timeSlots )  throws  InvalidTimeException{
-        testInputExceptions(schedule, pet, description, service, timeSlots);
-        this.schedule = schedule;
+    public Appointment( Pet pet, String description, int timeSlots ) {
+        testInputExceptions(pet, description, timeSlots);
         this.pet = pet;
-        this.service = service;
         this.appointmentDescription = description;
         this.timeSlots = timeSlots;
-        earliestTimeSlot = new Time();
     }
 
 
@@ -71,14 +68,14 @@ public class Appointment {
         return earliestTimeSlot;
     }
 
-    private void testInputExceptions(Schedule sc, Pet p, String des, ServiceProvided se, int tS) throws InvalidTimeException {
-        if(sc == null) {
-            throw new NullArgumentException("Schedule cannot be null");
-        } else if(p == null) {
+    public void setEarliestTimeSlot(Time time) {
+        this.earliestTimeSlot = time;
+    }
+
+    private void testInputExceptions(Pet p, String des, int tS) {
+        if(p == null) {
             throw new NullArgumentException("Pet cannot be null");
-        } else if(se == null) {
-            throw new NullArgumentException("Service cannot be null");
-        } else if(tS<=0 || tS >sc.getBookings().size()) {
+        } else if(tS<=0 || tS >schedule.getBookings().size()) {
             throw new InvalidTimeException("Time slots has to be greater than zero and less than or equal to number of available booking times");
         } else if(des == null) {
             throw new NullArgumentException("Description cannot be null");

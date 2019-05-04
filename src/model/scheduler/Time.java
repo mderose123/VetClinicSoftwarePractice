@@ -14,6 +14,7 @@ public class Time {
     }
 
     public Time(int hour, int minute) {
+        checkInvalidTimeException(hour, minute);
         this.hour = hour;
         this.minute = minute;
     }
@@ -115,6 +116,18 @@ public class Time {
     @Override
     public int hashCode() {
         return Objects.hash(hour, minute);
+    }
+
+    public static void checkInvalidTimeException(int hour, int minute) {
+        if (hour < 0 || hour > 23) {
+            throw new InvalidTimeException("Hour must be between 0 and 23");
+        }
+        if ((minute < 0 || minute > 45)) {
+            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
+        }
+        if( minute % Schedule.APPOINTMENT_TIME_ALLOTMENT != 0) {
+            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
+        }
     }
 
 
