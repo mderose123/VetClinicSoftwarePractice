@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Time {
     private int hour;
     private int minute;
-    private String amOrPm;
 
     public Time() {
       hour = 0;
@@ -78,11 +77,14 @@ public class Time {
         String s = "";
         int i = this.getHour() - 12;
         String ap ="";
-        if(i >= 0 && i< 10) {
+        if(i >= 1 && i< 10) {
             s = "0" + i + ":";
             ap = "PM";
         } else if (i>=10 && i<=12) {
             s = i + ":";
+            ap = "PM";
+        } else if (i == 0)  {
+            s = this.getHour() + ":";
             ap = "PM";
         } else {
             if(this.getHour() < 10) {
