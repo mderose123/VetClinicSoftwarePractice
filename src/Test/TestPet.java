@@ -5,6 +5,9 @@ import model.client.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+
 
 
 public class TestPet {
@@ -12,7 +15,7 @@ public class TestPet {
     private Pet testPet;
     private Owner owner;
 
-    @BeforeEach
+    @Before
     public void runBefore() {
         testPet = new Pet("Fido", owner);
     }
