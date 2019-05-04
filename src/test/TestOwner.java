@@ -1,6 +1,5 @@
 package test;
 
-
 import model.client.*;
 import org.junit.Before;
 import org.junit.Test;

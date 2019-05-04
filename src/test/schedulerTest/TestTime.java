@@ -2,26 +2,30 @@ package test.schedulerTest;
 
 import exceptions.InvalidTimeException;
 import model.scheduler.Time;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 
 public class TestTime {
     Time time;
 
-    @BeforeEach
-    void runBefore() {
+    @Before
+    public void runBefore() {
         time = new Time();
     }
 
     @Test
-    void testConstructor() {
+    public void testConstructor() {
         testTimeFields(0, 0);
     }
 
     @Test
-    void testSetHourOne(){
+    public void testSetHourOne(){
         try {
             time.setHour(1);
         } catch (InvalidTimeException e) {
@@ -31,7 +35,7 @@ public class TestTime {
     }
 
     @Test
-    void testSetHour23(){
+    public void testSetHour23(){
         try {
             time.setHour(23);
         } catch (InvalidTimeException e) {
@@ -43,18 +47,17 @@ public class TestTime {
 
 
     @Test
-    void testSetHour24(){
+    public void testSetHour24() {
         try {
             time.setHour(24);
             fail("Should have thrown InvalidTimeException");
         } catch (InvalidTimeException e) {
             //do nothing
         }
-
     }
 
     @Test
-    void testSetHourNegative(){
+    public void testSetHourNegative(){
         try {
             time.setHour(-1);
             fail("Should have thrown InvalidTimeException");
@@ -65,7 +68,7 @@ public class TestTime {
     }
 
     @Test
-    void testSetMinuteNegative(){
+    public void testSetMinuteNegative(){
         try {
             time.setMinute(-1);
             fail("Should have thrown InvalidTimeException");
@@ -76,7 +79,7 @@ public class TestTime {
     }
 
     @Test
-    void testSetMinute61(){
+    public void testSetMinute61(){
         try {
             time.setMinute(61);
             fail("Should have thrown InvalidTimeException");
@@ -87,7 +90,7 @@ public class TestTime {
     }
 
     @Test
-    void testSetMinute42(){
+    public void testSetMinute42(){
         try {
             time.setMinute(42);
             fail("Should have thrown InvalidTimeException");
@@ -98,7 +101,7 @@ public class TestTime {
     }
 
     @Test
-    void testSetMinute45(){
+    public void testSetMinute45(){
         try {
             time.setMinute(45);
         } catch (InvalidTimeException e) {
@@ -108,13 +111,13 @@ public class TestTime {
     }
 
     @Test
-    void testAddAppointmentTimeAllotmentFromZeroMinutes(){
+    public void testAddAppointmentTimeAllotmentFromZeroMinutes(){
         time.addAppointmentTimeAllotment();
         testTimeFields(0,15);
     }
 
     @Test
-    void testAddAppointmentTimeAllotmentFrom45Minutes(){
+    public void testAddAppointmentTimeAllotmentFrom45Minutes(){
         try {
             time.setMinute(45);
         } catch (InvalidTimeException e) {
@@ -124,8 +127,9 @@ public class TestTime {
         time.addAppointmentTimeAllotment();
         testTimeFields(1,0);
     }
+
     @Test
-    void testAddAppointmentTimeAllotmentFourTimes(){
+    public void testAddAppointmentTimeAllotmentFourTimes(){
         time.addAppointmentTimeAllotment();
         testTimeFields(0,15);
         time.addAppointmentTimeAllotment();
@@ -137,7 +141,7 @@ public class TestTime {
     }
 
     @Test
-    void testAddAppointmentTimeAllotmentLastTimeMidnight(){
+    public void testAddAppointmentTimeAllotmentLastTimeMidnight(){
         try{
             time.setHour(23);
         } catch (InvalidTimeException e) {
@@ -154,7 +158,7 @@ public class TestTime {
     }
 
     @Test
-    void testAddAppointmentTimeAllotmentLastTime2300Hours(){
+    public void testAddAppointmentTimeAllotmentLastTime2300Hours(){
         try{
             time.setHour(22);
         } catch (InvalidTimeException e) {
@@ -171,13 +175,13 @@ public class TestTime {
     }
 
     @Test
-    void testIsBeforeTrue() {
+    public void testIsBeforeTrue() {
         Time compareTime = new Time(23, 45);
         assertTrue(time.isBefore(compareTime));
     }
 
     @Test
-    void testIsBeforeFalse() {
+    public void testIsBeforeFalse() {
         Time compareTime = new Time(14, 45);
         try {
             time.setMinute(45);
@@ -189,13 +193,13 @@ public class TestTime {
     }
 
     @Test
-    void testIsBeforeHourSameMinuteDifferentTrue(){
+    public void testIsBeforeHourSameMinuteDifferentTrue(){
         Time compareTime = new Time(0,45);
         assertTrue(time.isBefore(compareTime));
     }
 
     @Test
-    void testIsAfterTrue() {
+    public void testIsAfterTrue() {
         Time compareTime = new Time(14, 30);
         try {
             time.setMinute(45);
@@ -207,13 +211,13 @@ public class TestTime {
     }
 
     @Test
-    void testIsAfterFalse() {
+    public void testIsAfterFalse() {
         Time compareTime = new Time(23, 45);
         assertFalse(time.isAfter(compareTime));
     }
 
     @Test
-    void testisAfterHourSameMinuteDifferentTrue(){
+    public void testisAfterHourSameMinuteDifferentTrue(){
         Time compareTime = new Time(0, 0);
         try {
             time.setMinute(45);
@@ -225,7 +229,7 @@ public class TestTime {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         assertEquals("00:00AM", time.toString());
     }
 
@@ -240,9 +244,7 @@ public class TestTime {
 
 
 
-
-
-    private void testTimeFields(int i, int j) {
+    public void testTimeFields(int i, int j) {
         assertEquals(i, time.getHour());
         assertEquals(j, time.getMinute());
     }

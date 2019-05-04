@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import model.client.PhoneNumber;
 import org.junit.Before;
