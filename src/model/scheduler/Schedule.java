@@ -4,6 +4,7 @@ package model.scheduler;
 import exceptions.AppointmentBookedException;
 import exceptions.InvalidTimeException;
 import exceptions.NullArgumentException;
+import model.client.Pet;
 
 import java.util.*;
 
@@ -55,10 +56,165 @@ public abstract class Schedule {
         return latestBookableTime;
     }
 
+    public boolean checkBookingAvailability(Time startTime, int numTimeSlots) {
+        if(startTime == null) {
+            throw new NullArgumentException();
+        }
+        if(numTimeSlots<=0 || numTimeSlots > bookings.size()) {
+            throw new InvalidTimeException("Number of Time Slots must be >0 and <bookings.size()");
+        }
+        do{
+            if(bookings.get(startTime) != null) {
+                return false;
+            }
+            startTime.addAppointmentTimeAllotment();
+            numTimeSlots--;
+        } while (numTimeSlots != 0);
+        return true;
+    }
+
+    public boolean checkBookingAvailability(Time startTime, Time endTime) {
+        if(startTime == null) {
+            throw new NullArgumentException();
+        }
+        if(startTime.isAfter(endTime)) {
+            throw new InvalidTimeException("Start Time must be before or the same as the End Time");
+        }
+        do{
+            if(bookings.get(startTime) != null) {
+                return false;
+            }
+            startTime.addAppointmentTimeAllotment();
+        } while (!startTime.equals(endTime));
+        return true;
+    }
+
+    public List<Appointment> getAppointmentsBookedInGivenTimeFrame(Time startTime, int numTimeSlots) {
+        if(startTime == null) {
+            throw new NullArgumentException();
+        }
+        if(numTimeSlots<=0 || numTimeSlots > bookings.size()) {
+            throw new InvalidTimeException("Number of Time Slots must be >0 and <bookings.size()");
+        }
+        List<Appointment> appointments = new ArrayList<>();
+        do{
+            if(bookings.get(startTime) != null) {
+                appointments.add(bookings.get(startTime));
+            }
+            startTime.addAppointmentTimeAllotment();
+            numTimeSlots--;
+        } while (numTimeSlots != 0);
+        return appointments;
+    }
+
+    public List<Appointment> getAppointmentsBookedInGivenTimeFrame(Time startTime, Time endTime) {
+        if(startTime == null || endTime == null) {
+            throw new NullArgumentException();
+        }
+        if(startTime.isAfter(endTime)) {
+            throw new InvalidTimeException("Start Time must be before or the same as End Time");
+        }
+        List<Appointment> appointments = new ArrayList<>();
+        do{
+            if(bookings.get(startTime) != null) {
+                appointments.add(bookings.get(startTime));
+            }
+            startTime.addAppointmentTimeAllotment();
+        } while (!startTime.equals(endTime));
+        return appointments;
+    }
+
+    public void bookNewAppointment(Time time, Pet pet, String description, int numTimeSlots) throws AppointmentBookedException {
+        if(time == null || pet == null || description == null ) {
+            throw new NullArgumentException();
+        }
+        if(numTimeSlots < 1 || numTimeSlots > bookings.size()) {
+            throw new InvalidTimeException();
+        }
+        if(!checkBookingAvailability(time, numTimeSlots)) {
+            throw new AppointmentBookedException("Given time frame is unavailable to book appointments");
+        } else {
+            Appointment newAppointment = new Appointment(pet, description, numTimeSlots);
+            newAppointment.setEarliestTimeSlot(time);
+            newAppointment.setSchedule(this);
+            while(numTimeSlots != 0) {
+                bookings.put(time, newAppointment);
+                time.addAppointmentTimeAllotment();
+                numTimeSlots--;
+            }
+        }
+    }
+
+    public void bookExistingAppointment(Time time, Appointment appointment) throws AppointmentBookedException {
+        if(time == null || appointment == null) {
+            throw new NullArgumentException();
+        }
+        if(!checkBookingAvailability(time, appointment.getTimeSlots())) {
+            throw new AppointmentBookedException("Given time frame is unavailable to book appointments");
+        } else {
+            appointment.setEarliestTimeSlot(time);
+            appointment.setSchedule(this);
+            int numTimeSlots = appointment.getTimeSlots();
+            while(numTimeSlots != 0) {
+                bookings.put(time, appointment);
+                time.addAppointmentTimeAllotment();
+                numTimeSlots--;
+            }
+        }
+    }
+
+    public void changeAppointment(Time time, Appointment appointment) throws AppointmentBookedException {
+        if(time == null || appointment == null) {
+            throw new NullArgumentException();
+        }
+        if(!checkBookingAvailability(time, appointment.getTimeSlots())) {
+            throw new AppointmentBookedException("Given time frame is unavailable to book appointments");
+        } else {
+            cancelAppointment(appointment);
+            bookExistingAppointment(time, appointment);
+        }
+    }
+
+    public void cancelAppointment(Appointment appointment) {
+        if(appointment == null) {
+            throw new NullArgumentException();
+        }
+        if(bookings.containsValue(appointment)) {
+            Time newTime = appointment.getEarliestTimeSlot();
+            int numTimeSlots = appointment.getTimeSlots();
+            do {
+                bookings.remove(newTime, appointment);
+                newTime.addAppointmentTimeAllotment();
+                numTimeSlots--;
+            } while (numTimeSlots != 0);
+        }
+    }
+
+    public boolean confirmAppointment(Time confirmTime, Appointment appointment) {
+        if(confirmTime == null || appointment == null) {
+            throw new NullArgumentException();
+        }
+        int numTimeSlots = appointment.getTimeSlots();
+        if(!bookings.containsValue(appointment) && !confirmTime.equals(appointment.getEarliestTimeSlot())) {
+            return false;
+        } else {
+            do{
+                if(!bookings.get(confirmTime).equals(appointment)) {
+                    return false;
+                }
+                confirmTime.addAppointmentTimeAllotment();
+                numTimeSlots--;
+            } while(numTimeSlots != 0);
+            return true;
+        }
+    }
+
+
+
     //MODIFIES: this
     //EFFECTS: removes booking times before given hour and minute, set earliestBookableTime
-    public void setLaterFirstBookableAppointment(int hour, int minute) throws InvalidTimeException, AppointmentBookedException {
-        checkInvalidTimeException(hour, minute);
+    public void setLaterFirstBookableAppointment(int hour, int minute) throws AppointmentBookedException {
+        Time.checkInvalidTimeException(hour, minute);
         if(earliestBookableTime.equals(new Time(hour, minute))) {
             throw new InvalidTimeException("Given time is the same as current earliest bookable time");
         }
@@ -75,7 +231,7 @@ public abstract class Schedule {
     //MODIFIES: this
     //EFFECTS: removes bookable times after given hour and minute, set latestBookableTime
     public void setEarlierLastBookableAppointment(int hour, int minute) throws InvalidTimeException, AppointmentBookedException {
-        checkInvalidTimeException(hour, minute);
+        Time.checkInvalidTimeException(hour, minute);
         if(latestBookableTime.equals(new Time(hour, minute))) {
             throw new InvalidTimeException("Given time is the same as current latest bookable time");
         }
@@ -96,7 +252,7 @@ public abstract class Schedule {
     //MODIFIES: this
     //EFFECTS: adds bookable times from given hour and minute up to 00:00 AM
     public void setEarlierEarliestBookableTime(int hour, int minute) throws InvalidTimeException {
-        checkInvalidTimeException(hour, minute);
+        Time.checkInvalidTimeException(hour, minute);
         if (earliestBookableTime.isMidnight()) {
             throw new InvalidTimeException("Current Earliest Booking Time is 00:00 AM");
         } else if (earliestBookableTime.isBefore(new Time(hour, minute))) {
@@ -117,7 +273,7 @@ public abstract class Schedule {
     //MODIFIES: this
     //EFFECTS: adds bookable times up to given hour and minute before 11:45 PM
     public void setLaterLatestBookableTime(int hour, int minute) throws InvalidTimeException {
-        checkInvalidTimeException(hour, minute);
+        Time.checkInvalidTimeException(hour, minute);
         if (latestBookableTime.equals(new Time(23,45))) {
             throw new InvalidTimeException("Current Latest Booking Time is currently 11:45 PM");
         } else if (latestBookableTime.isAfter(new Time(hour, minute))) {
@@ -135,20 +291,9 @@ public abstract class Schedule {
     }
 
 
+
+
 //****************************************HELPER FUNCTIONS*************************************************************
-    private void checkInvalidTimeException(int hour, int minute) throws InvalidTimeException {
-        if (hour < 0 || hour > 23) {
-            throw new InvalidTimeException("Hour must be between 0 and 23");
-        }
-        if ((minute < 0 || minute > 45)) {
-            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
-        }
-        if( minute % APPOINTMENT_TIME_ALLOTMENT != 0) {
-            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
-        }
-    }
-
-
     //MODIFIES: none
     //EFFECTS: checks to see if appointments booked before provided hour and minute
     private void checkBookedAppointmentsBefore(int hour, int minute, Time refTime) throws AppointmentBookedException, InvalidTimeException {
