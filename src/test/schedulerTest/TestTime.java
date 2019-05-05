@@ -233,6 +233,16 @@ public class TestTime {
         assertEquals("00:00AM", time.toString());
     }
 
+    @Test
+    void testEquals() {
+        Time compareTime = new Time(23, 45);
+        Time newTime = new Time(23, 45);
+        assertEquals(compareTime, newTime);
+    }
+
+
+
+
 
     public void testTimeFields(int i, int j) {
         assertEquals(i, time.getHour());

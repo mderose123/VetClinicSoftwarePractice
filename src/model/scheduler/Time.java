@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Time {
     private int hour;
     private int minute;
-    private String amOrPm;
 
     public Time() {
       hour = 0;
@@ -15,6 +14,7 @@ public class Time {
     }
 
     public Time(int hour, int minute) {
+        checkInvalidTimeException(hour, minute);
         this.hour = hour;
         this.minute = minute;
     }
@@ -78,11 +78,14 @@ public class Time {
         String s = "";
         int i = this.getHour() - 12;
         String ap ="";
-        if(i >= 0 && i< 10) {
+        if(i >= 1 && i< 10) {
             s = "0" + i + ":";
             ap = "PM";
         } else if (i>=10 && i<=12) {
             s = i + ":";
+            ap = "PM";
+        } else if (i == 0)  {
+            s = this.getHour() + ":";
             ap = "PM";
         } else {
             if(this.getHour() < 10) {
@@ -113,6 +116,18 @@ public class Time {
     @Override
     public int hashCode() {
         return Objects.hash(hour, minute);
+    }
+
+    public static void checkInvalidTimeException(int hour, int minute) {
+        if (hour < 0 || hour > 23) {
+            throw new InvalidTimeException("Hour must be between 0 and 23");
+        }
+        if ((minute < 0 || minute > 45)) {
+            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
+        }
+        if( minute % Schedule.APPOINTMENT_TIME_ALLOTMENT != 0) {
+            throw new InvalidTimeException("Minute must be between 0 and 45 and a multiple of 15");
+        }
     }
 
 

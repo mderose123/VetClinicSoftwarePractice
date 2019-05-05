@@ -3,8 +3,13 @@ package test.schedulerTest;
 import exceptions.AppointmentBookedException;
 import exceptions.InvalidTimeException;
 import exceptions.NullArgumentException;
+import model.client.Owner;
+import model.client.OwnerName;
+import model.client.Pet;
+import model.client.Prefix;
 import model.scheduler.GroomingSchedule;
 import model.scheduler.Schedule;
+import model.scheduler.Time;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,19 +18,27 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static junit.framework.TestCase.fail;
+
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 
 public class TestGroomingSchedule {
     Schedule schedule;
     Date date;
     Calendar calendar;
+    Owner owner;
+    Pet pet;
+
 
     @Before
     public void runBefore() {
         calendar =  Calendar.getInstance();
         date = calendar.getTime();
         schedule = new GroomingSchedule(date);
+        owner = new Owner(new OwnerName(Prefix.MR, "dale", "mc", "dale"));
+        pet = new Pet("Boo", owner);
     }
 
     @Test
@@ -105,8 +118,55 @@ public class TestGroomingSchedule {
         }
         assertEquals(84, schedule.getBookings().size());
         System.out.println(schedule.getBookings());
-
     }
+
+    @Test
+    public void testCheckBookingAvailabilityNullTime(){
+        try{
+            schedule.checkBookingAvailability(null, 1);
+            fail("Should have thrown NullArgumentException");
+        } catch(NullArgumentException e) {
+            //do nothing
+        }
+    }
+
+    @Test
+    public void testCheckBookingAvailabilityIncorrectTimeSlotInput(){
+        try{
+            Time newTime = new Time();
+            schedule.checkBookingAvailability(newTime, 0);
+            fail("Should have thrown InvalidTimeException");
+        } catch(InvalidTimeException e) {
+            //do nothing
+        }
+        try{
+            Time newTime = new Time();
+            schedule.checkBookingAvailability(newTime, 97);
+            fail("Should have thrown InvalidTimeException");
+        } catch(InvalidTimeException e) {
+            //do nothing
+        }
+    }
+
+    @Test
+    public void testCheckBookingAvailabilityValidOneTimeSlotInputReturnTrue() {
+            Time newTime = new Time();
+            assertTrue(schedule.checkBookingAvailability(newTime, 1));
+    }
+
+    @Test
+    public void testCheckBookingAvailabilityValidMultiTimeSlotInputReturnTrue() {
+        Time newTime = new Time();
+        assertTrue(schedule.checkBookingAvailability(newTime, 50));
+    }
+
+
+
+
+
+
+
+
 
 
 
