@@ -160,6 +160,41 @@ public class TestGroomingSchedule {
         assertTrue(schedule.checkBookingAvailability(newTime, 50));
     }
 
+    @Test
+    public void testGetEarliestBookableTime(){
+        assertEquals(new Time(0,0), schedule.getEarliestBookableTime());
+        try {
+            schedule.setLaterFirstBookableAppointment(3, 0);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        assertEquals(new Time(3,0), schedule.getEarliestBookableTime());
+    }
+
+    @Test
+    public void testGetLatestBookableTime(){
+        assertEquals(new Time(23,45), schedule.getLatestBookableTime());
+        try {
+            schedule.setEarlierLastBookableAppointment(3,0);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        assertEquals(new Time(3,0), schedule.getLatestBookableTime());
+    }
+
+    @Test
+    public void testTotalNumberOfBookableAppointments() {
+        assertEquals(96, schedule.getTotalBookableAppointments());
+        try {
+            schedule.setEarlierLastBookableAppointment(3,0);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        assertEquals(new Time(3,0), schedule.getLatestBookableTime());
+        assertEquals(13, schedule.getTotalBookableAppointments());
+
+    }
+
 
 
 

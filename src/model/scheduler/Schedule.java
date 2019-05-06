@@ -56,6 +56,24 @@ public abstract class Schedule {
         return latestBookableTime;
     }
 
+    public int getTotalBookableAppointments() {
+        int count = 0;
+        Time newTime = new Time(earliestBookableTime.getHour(), earliestBookableTime.getMinute());
+        while(newTime.isBefore(latestBookableTime) || !newTime.equals(latestBookableTime)) {
+            if(bookings.get(newTime) == null) {
+                count++;
+            }
+            newTime.addAppointmentTimeAllotment();
+        }
+        if(newTime.equals(latestBookableTime)) {
+            if(bookings.get(earliestBookableTime) == null) {
+                count++;
+            }
+            return count;
+        }
+        return count;
+    }
+
     public boolean checkBookingAvailability(Time startTime, int numTimeSlots) {
         if(startTime == null) {
             throw new NullArgumentException();
