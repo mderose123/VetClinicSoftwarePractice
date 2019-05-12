@@ -10,8 +10,9 @@ import model.scheduler.Appointment;
 import model.scheduler.GroomingSchedule;
 import model.scheduler.Schedule;
 import model.scheduler.ServiceProvided;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ public class TestAppointment {
     Pet pet;
     Owner owner;
 
-    @BeforeEach
+    @Before
     void runBefore() {
         calendar = Calendar.getInstance();
         date = calendar.getTime();
