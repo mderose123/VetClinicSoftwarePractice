@@ -39,7 +39,7 @@ public class TestAppointment {
         owner = new Owner(new OwnerName(Prefix.MR, "dale", "mc", "dale"));
         pet = new Pet("buppy", owner);
         try {
-            appointment = new Appointment( pet, "appointment details", 1);
+            appointment = new Appointment(schedule, pet, "appointment details", 1);
         } catch (NullArgumentException e) {
             fail("Should not have thrown NullArgumentException");
         } catch (InvalidTimeException e) {
@@ -50,7 +50,7 @@ public class TestAppointment {
     @Test
     void testConstructorThrowsNullArgumentException(){
         try {
-            appointment = new Appointment(pet, "appointment details", 1);
+            appointment = new Appointment(schedule, pet, "appointment details", 1);
             fail("Should not have thrown NullArgumentException");
         } catch (NullArgumentException e) {
             //do nothing
@@ -66,7 +66,7 @@ public class TestAppointment {
             fail("Should not have thrown InvalidTimeException");
         }
         try {
-            appointment = new Appointment( pet, "appointment details", 1);
+            appointment = new Appointment(schedule, pet, "appointment details", 1);
             fail("Should not have thrown NullArgumentException");
         } catch (NullArgumentException e) {
             //do nothing
@@ -74,7 +74,7 @@ public class TestAppointment {
             fail("Should not have thrown InvalidTimeException");
         }
         try {
-            appointment = new Appointment(pet,  null, 1);
+            appointment = new Appointment(schedule, pet,  null, 1);
             fail("Should not have thrown NullArgumentException");
         } catch (NullArgumentException e) {
             //do nothing
@@ -86,7 +86,7 @@ public class TestAppointment {
     @Test
     void testConstructorLessThanOneTimeSlots(){
         try {
-            appointment = new Appointment(pet, "appointment details", 0);
+            appointment = new Appointment(schedule, pet, "appointment details", 0);
             fail("Should have thrown InvalidTimeException");
         } catch (NullArgumentException e) {
             fail("Should not have thrown NullArgumentException");
@@ -94,7 +94,7 @@ public class TestAppointment {
             //do nothing
         }
         try {
-            appointment = new Appointment( pet, "appointment details", -10);
+            appointment = new Appointment(schedule,  pet, "appointment details", -10);
             fail("Should have thrown InvalidTimeException");
         } catch (NullArgumentException e) {
             fail("Should not have thrown NullArgumentException");
@@ -107,7 +107,7 @@ public class TestAppointment {
     @Test
     void testConstructorMoreThanScheduleTimeSlots() {
         try {
-            appointment = new Appointment(pet, "appointment details", 97);
+            appointment = new Appointment(schedule, pet, "appointment details", 97);
             fail("Should have thrown InvalidTimeException");
         } catch (NullArgumentException e) {
             fail("Should not have thrown NullArgumentException");

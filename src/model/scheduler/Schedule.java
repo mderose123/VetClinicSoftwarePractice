@@ -28,7 +28,7 @@ public abstract class Schedule {
         this.date = date;
         this.calendar = Calendar.getInstance();
         calendar.setTime(date);
-        bookings = new HashMap<>();
+        bookings = new LinkedHashMap<>();
         time = new Time();
         earliestBookableTime = new Time();
         latestBookableTime = new Time(23,45);
@@ -81,11 +81,12 @@ public abstract class Schedule {
         if(numTimeSlots<=0 || numTimeSlots > bookings.size()) {
             throw new InvalidTimeException("Number of Time Slots must be >0 and <bookings.size()");
         }
+        Time newTime = new Time(startTime.getHour(), startTime.getMinute());
         do{
-            if(bookings.get(startTime) != null) {
+            if(bookings.get(newTime) != null) {
                 return false;
             }
-            startTime.addAppointmentTimeAllotment();
+            newTime.addAppointmentTimeAllotment();
             numTimeSlots--;
         } while (numTimeSlots != 0);
         return true;
@@ -152,9 +153,8 @@ public abstract class Schedule {
         if(!checkBookingAvailability(time, numTimeSlots)) {
             throw new AppointmentBookedException("Given time frame is unavailable to book appointments");
         } else {
-            Appointment newAppointment = new Appointment(pet, description, numTimeSlots);
+            Appointment newAppointment = new Appointment(this, pet, description, numTimeSlots);
             newAppointment.setEarliestTimeSlot(time);
-            newAppointment.setSchedule(this);
             while(numTimeSlots != 0) {
                 bookings.put(time, newAppointment);
                 time.addAppointmentTimeAllotment();
@@ -167,11 +167,11 @@ public abstract class Schedule {
         if(time == null || appointment == null) {
             throw new NullArgumentException();
         }
-        if(!checkBookingAvailability(time, appointment.getTimeSlots())) {
+        Time newTime = new Time(time.getHour(), time.getMinute());
+        if(!checkBookingAvailability(newTime, appointment.getTimeSlots())) {
             throw new AppointmentBookedException("Given time frame is unavailable to book appointments");
         } else {
-            appointment.setEarliestTimeSlot(time);
-            appointment.setSchedule(this);
+            appointment.setEarliestTimeSlot(new Time(time.getHour(), time.getMinute()));
             int numTimeSlots = appointment.getTimeSlots();
             while(numTimeSlots != 0) {
                 bookings.put(time, appointment);
@@ -205,6 +205,8 @@ public abstract class Schedule {
                 newTime.addAppointmentTimeAllotment();
                 numTimeSlots--;
             } while (numTimeSlots != 0);
+            appointment.setSchedule(null);
+            appointment.setEarliestTimeSlot(null);
         }
     }
 

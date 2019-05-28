@@ -7,6 +7,7 @@ import model.client.Owner;
 import model.client.OwnerName;
 import model.client.Pet;
 import model.client.Prefix;
+import model.scheduler.Appointment;
 import model.scheduler.GroomingSchedule;
 import model.scheduler.Schedule;
 import model.scheduler.Time;
@@ -29,7 +30,11 @@ public class TestGroomingSchedule {
     Date date;
     Calendar calendar;
     Owner owner;
-    Pet pet;
+    Pet pet1;
+    Pet pet2;
+    Appointment appointment1;
+    Appointment appointment2;
+
 
 
     @Before
@@ -38,9 +43,12 @@ public class TestGroomingSchedule {
         date = calendar.getTime();
         schedule = new GroomingSchedule(date);
         owner = new Owner(new OwnerName(Prefix.MR, "dale", "mc", "dale"));
-        pet = new Pet("Boo", owner);
+        pet1 = new Pet("Boo", owner);
+        pet2 = new Pet("Cheeto", owner);
+        appointment1 = new Appointment(schedule, pet1, "appointment 1", 3);
+        appointment2 = new Appointment(schedule, pet2, "appointment 2", 4);
     }
-
+//***************************Constructor Tests***********************************
     @Test
     public void testConstructor() {
         assertEquals(96, schedule.getBookings().size());
@@ -57,7 +65,70 @@ public class TestGroomingSchedule {
             //do nothing
         }
     }
+//****************************bookExistingAppointment Tests********************************
+    @Test
+    public void testBookExistingAppointmentNullArgumentExceptionThrown(){
+        try{
+            schedule.bookExistingAppointment(null, appointment1);
+            fail("Should have thrown NullArgumentException");
+        } catch (NullArgumentException e) {
+            //do nothing
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        try{
+            schedule.bookExistingAppointment(new Time(),null);
+            fail("Should have thrown NullArgumentException");
+        } catch (NullArgumentException e) {
+            //do nothing
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
 
+
+    }
+
+    @Test
+    public void testBookOneExistingAppointmentValidInputNoExceptionThrown() {
+        try{
+            schedule.bookExistingAppointment(new Time(), appointment1);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        assertEquals(appointment1, schedule.getBookings().get(new Time()));
+        assertEquals(appointment1, schedule.getBookings().get(new Time(0,15)));
+        assertEquals(appointment1, schedule.getBookings().get(new Time(0,30)));
+        System.out.println(schedule.getBookings());
+    }
+
+    @Test
+    public void testBookTwoExistingAppointmentValidInputNoExceptionThrown() {
+        try{
+            schedule.bookExistingAppointment(new Time(), appointment1);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        assertEquals(appointment1, schedule.getBookings().get(new Time()));
+        assertEquals(appointment1, schedule.getBookings().get(new Time(0,15)));
+        assertEquals(appointment1, schedule.getBookings().get(new Time(0,30)));
+
+        try{
+            schedule.bookExistingAppointment(new Time(12,0), appointment2);
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        Time newTime = appointment2.getEarliestTimeSlot();
+        int numTimeSlots = appointment2.getTimeSlots();
+        while(numTimeSlots != 0) {
+            assertEquals(appointment2, schedule.getBookings().get(newTime) );
+            newTime.addAppointmentTimeAllotment();
+            numTimeSlots--;
+        }
+        System.out.println(schedule.getBookings());
+    }
+
+
+//****************************checkBookableAppointmentsBefore Tests************************
     @Test
     public void testCbAbInvalidHourInputTooLarge() {
         try {
@@ -106,7 +177,7 @@ public class TestGroomingSchedule {
             fail("Should not have thrown AppointmentBookedException");
         }
     }
-
+//***************************setLaterFirstBookableAppointment Valid Input Tests******************
     @Test
     public void testSlFbAValidInput() {
         try {
@@ -119,7 +190,7 @@ public class TestGroomingSchedule {
         assertEquals(84, schedule.getBookings().size());
         System.out.println(schedule.getBookings());
     }
-
+//***************************checkBookingAvailability Tests***************************
     @Test
     public void testCheckBookingAvailabilityNullTime(){
         try{
@@ -161,6 +232,29 @@ public class TestGroomingSchedule {
     }
 
     @Test
+    public void testCheckBookingAvailabilityStartAndEndTimeInputValid() {
+        Time startTime = new Time();
+        Time endTime = new Time(23,45);
+        assertTrue(schedule.checkBookingAvailability(startTime, endTime));
+    }
+
+    @Test
+    public void testCheckBookingAvailabilityStartAndEndTimeInputValidAppointmentBooked() {
+        try{
+            schedule.bookExistingAppointment(new Time(12,15), appointment1 );
+        } catch (AppointmentBookedException e) {
+            fail("Should not have thrown AppointmentBookedException");
+        }
+        Time startTime = new Time();
+        Time endTime = new Time(23,45);
+        assertFalse(schedule.checkBookingAvailability(startTime, endTime));
+        System.out.println(schedule.getBookings());
+
+
+    }
+
+//*********************************getEarliestBookableAppointment Tests**************
+    @Test
     public void testGetEarliestBookableTime(){
         assertEquals(new Time(0,0), schedule.getEarliestBookableTime());
         try {
@@ -170,7 +264,7 @@ public class TestGroomingSchedule {
         }
         assertEquals(new Time(3,0), schedule.getEarliestBookableTime());
     }
-
+//*******************************getLatestBookableAppointment Tests****************
     @Test
     public void testGetLatestBookableTime(){
         assertEquals(new Time(23,45), schedule.getLatestBookableTime());
@@ -181,7 +275,7 @@ public class TestGroomingSchedule {
         }
         assertEquals(new Time(3,0), schedule.getLatestBookableTime());
     }
-
+//*******************************getTotalNumberOfBookableAppointments**************
     @Test
     public void testTotalNumberOfBookableAppointments() {
         assertEquals(96, schedule.getTotalBookableAppointments());
@@ -192,8 +286,12 @@ public class TestGroomingSchedule {
         }
         assertEquals(new Time(3,0), schedule.getLatestBookableTime());
         assertEquals(13, schedule.getTotalBookableAppointments());
-
     }
+
+
+
+
+
 
 
 
