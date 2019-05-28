@@ -3,6 +3,7 @@ package model.client;
 import exceptions.NullArgumentException;
 import model.notes.Note;
 import model.report.ReportCard;
+import model.scheduler.Appointment;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class Pet {
     private int age;
     private double microchip;
 
-   // List<Owner> owners;
+    private List<Owner> owners;
     private List<ReportCard> reportCards;
     private List<Note> petNotes;
     private Set<BehaviorTag> behaviorTags;
